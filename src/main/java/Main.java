@@ -58,9 +58,8 @@ public class Main {
 
             Invoice invoice = new Invoice();
             CustomersEntity customer = session.get(CustomersEntity.class, "VINET");
-            Invoice newElement = invoice.invoice(startDate, endDate, customer, session);
-            System.out.println("\n" + customer.getCustomerId());
-            System.out.println(newElement.getCustomerID());
+            invoice.invoice(startDate, endDate, customer, session);
+
 
 
         } finally {
