@@ -1,10 +1,8 @@
-import invoice.Invoice;
+import invoiceData.Invoice;
 import northwindEntities.CategoriesEntity;
 import northwindEntities.CustomersEntity;
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
-
-import javax.persistence.metamodel.EntityType;
 
 
 import java.sql.Timestamp;
@@ -58,7 +56,7 @@ public class Main {
 
             Invoice invoice = new Invoice();
             CustomersEntity customer = session.get(CustomersEntity.class, "VINET");
-            invoice.invoice(startDate, endDate, customer, session);
+            invoice.invoice("Invoice1", startDate, endDate, customer, session);
 
 
 

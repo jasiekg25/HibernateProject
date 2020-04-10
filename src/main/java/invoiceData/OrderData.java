@@ -1,4 +1,4 @@
-package invoice;
+package invoiceData;
 
 import northwindEntities.CustomersEntity;
 import org.hibernate.Session;
@@ -14,7 +14,6 @@ public class OrderData {
     private int orderID;
     private Date orderDate;
     private String customerID;
-    private String companyName;
     private int productID;
     private String productName;
     private double unitPrice;
@@ -57,7 +56,7 @@ public class OrderData {
 
     public static List<OrderData> getOrdersList(Timestamp startDate, Timestamp endDate, CustomersEntity customer, Session session){
         @SuppressWarnings("rawtypes") Query query = session
-                .createQuery("select new invoice.OrderData (\n" +
+                .createQuery("select new invoiceData.OrderData (\n" +
                         "\t\to.orderId,\n" +
                         "\t\to.orderDate,\n" +
                         "\t\tc.customerId,\n" +
@@ -96,9 +95,6 @@ public class OrderData {
         return customerID;
     }
 
-    public String getCompanyName() {
-        return companyName;
-    }
 
     public int getProductID() {
         return productID;
@@ -126,5 +122,45 @@ public class OrderData {
 
     public double getTotalPrice() {
         return totalPrice;
+    }
+
+    public void setOrderID(int orderID) {
+        this.orderID = orderID;
+    }
+
+    public void setOrderDate(Date orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
+    }
+
+    public void setProductID(int productID) {
+        this.productID = productID;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setDiscount(double discount) {
+        this.discount = discount;
+    }
+
+    public void setFreight(double freight) {
+        this.freight = freight;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }
