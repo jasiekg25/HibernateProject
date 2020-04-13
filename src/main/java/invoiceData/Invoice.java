@@ -1,5 +1,6 @@
 package invoiceData;
 
+import invoiceGenerator.CamelCase;
 import invoiceGenerator.InvoiceGenerator;
 import northwindEntities.CustomersEntity;
 import org.hibernate.Session;
@@ -49,9 +50,10 @@ public class Invoice {
         double totalOrdersPrice = invoiceOrdersList.stream().map(OrderData::getTotalPrice).reduce(0.0, Double::sum);
         Invoice invoiceData = new Invoice(invoiceNumber, customer, invoiceOrdersList, startDate, endDate, totalFreightPrice, totalOrdersPrice);
 
-        invoiceData.printOutSummary();
-        File jasiekInvoice = new File("src/main/resources/" + customer.getCompanyName().replaceAll(" ", "_") + "_invoice.pdf");
-        InvoiceGenerator.makePDF(jasiekInvoice, invoiceData);
+//        invoiceData.printOutSummary();
+        String fileName = CamelCase.toCamelCase(customer.getCompanyName());
+        File newInvoice = new File("src/main/resources/" + fileName + "_invoice.pdf");
+        InvoiceGenerator.makePDF(newInvoice, invoiceData);
         return invoiceData;
     }
 

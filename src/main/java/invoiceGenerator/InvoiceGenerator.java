@@ -53,10 +53,7 @@ public class InvoiceGenerator {
             irdTable.addCell(getIRDCell(data.getInvoiceNumber()));
             irdTable.addCell(getIRDCell("Invoice Date"));
             irdTable.addCell(getIRDCell(date)); // pass invoice date
-            irdTable.addCell(getIRDCell("Invoice Period from"));
-            irdTable.addCell(getIRDCell(format.format(data.getStartDate())));
-            irdTable.addCell(getIRDCell("Invoice Period to"));
-            irdTable.addCell(getIRDCell(format.format(data.getEndDate())));
+
 
             PdfPTable irhTable = new PdfPTable(3);
             irhTable.setWidthPercentage(100);
@@ -122,8 +119,8 @@ public class InvoiceGenerator {
                 billTable.addCell(getBillRowCell((Math.floor(ordersList.get(i).getFreight() * 100) / 100) + ""));
                 billTable.addCell(getBillRowCell((Math.floor(ordersList.get(i).getTotalPrice() * 100) / 100) + ""));
             }
-            for (int j = 0; j < 15 - ordersList.size(); j++) {
-                billTable.addCell(getBillRowCell(" "));
+            for (int j = 0; j < 9; j++) {
+                billTable.addCell(getBillRowCell(""));
                 billTable.addCell(getBillRowCell(""));
                 billTable.addCell(getBillRowCell(""));
                 billTable.addCell(getBillRowCell(""));
@@ -131,27 +128,35 @@ public class InvoiceGenerator {
                 billTable.addCell(getBillRowCell(""));
             }
 
-//            PdfPTable validity = new PdfPTable(1);
-//            validity.setWidthPercentage(100);
-//            validity.addCell(getValidityCell(" "));
-//            validity.addCell(getValidityCell("Warranty"));
-//            validity.addCell(getValidityCell(" * Products purchased comes with 1 year national warranty \n   (if applicable)"));
-//            validity.addCell(getValidityCell(" * Warranty should be claimed only from the respective manufactures"));
-//            PdfPCell summaryL = new PdfPCell(validity);
-//            summaryL.setColspan(3);
-//            summaryL.setPadding(1.0f);
-//            billTable.addCell(summaryL);
+            PdfPTable validity = new PdfPTable(1);
+            validity.setWidthPercentage(100);
+            validity.addCell(getValidityCell(" "));
+            validity.addCell(getValidityCell("\t\tAdditional Info:"));
+            validity.addCell(getValidityCell("\tInvoice generated from Northwind Database "));
+            validity.addCell(getValidityCell("\tProject written with mysql, Hibernate & Java"));
+            PdfPCell summaryL = new PdfPCell(validity);
+            summaryL.setColspan(4);
+            summaryL.setPadding(1.0f);
+            billTable.addCell(summaryL);
 
             PdfPTable accounts = new PdfPTable(2);
             accounts.setWidthPercentage(100);
             accounts.addCell(getAccountsCell("Freight Total Price:"));
-            accounts.addCell(getAccountsCellR(String.valueOf(Math.floor(data.getTotalFreightPrice() * 100) / 100)));
+            accounts.addCell(getAccountsCellR("$" + String.valueOf(Math.floor(data.getTotalFreightPrice() * 100) / 100)));
             accounts.addCell(getAccountsCell("Orders Total Price:"));
-            accounts.addCell(getAccountsCellR(String.valueOf(Math.floor(data.getTotalOrdersPrice() * 100) / 100)));
+            accounts.addCell(getAccountsCellR("$" + String.valueOf(Math.floor(data.getTotalOrdersPrice() * 100) / 100)));
 //            accounts.addCell(getAccountsCell("Tax ("+data.getTax()+"%)"));
 //            accounts.addCell(getAccountsCellR(data.getTaxPrice()));
             accounts.addCell(getAccountsCell("Summary Total Price:"));
-            accounts.addCell(getAccountsCellR(String.valueOf(Math.floor((data.getTotalFreightPrice() + data.getTotalOrdersPrice()) * 100) / 100)));
+            accounts.addCell(getAccountsCellR("$" + String.valueOf(Math.floor((data.getTotalFreightPrice() + data.getTotalOrdersPrice()) * 100) / 100)));
+            accounts.addCell(getAccountsCell(""));
+            accounts.addCell(getAccountsCellR(""));
+            accounts.addCell(getAccountsCell("Invoice Period from"));
+            accounts.addCell(getAccountsCellR(format.format(data.getStartDate())));
+            accounts.addCell(getAccountsCell("Invoice Period due to"));
+            accounts.addCell(getAccountsCellR(format.format(data.getEndDate())));
+
+
             PdfPCell summaryR = new PdfPCell(accounts);
             summaryR.setColspan(9);
             billTable.addCell(summaryR);
@@ -159,7 +164,7 @@ public class InvoiceGenerator {
             PdfPTable describer = new PdfPTable(1);
             describer.setWidthPercentage(100);
             describer.addCell(getdescCell(" "));
-            describer.addCell(getdescCell("Invoice generated from Northwind Database \n\n Project written with mysql, Hibernate & Java"));
+            describer.addCell(getdescCell(" \n\n"));
 
             document.open();//PDF document opened........
 
