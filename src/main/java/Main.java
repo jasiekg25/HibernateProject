@@ -55,7 +55,7 @@ public class Main {
 //            Timestamp endDate = new Timestamp(2015, 4, 3, 0, 0, 0, 0);
 
             Invoice invoice = new Invoice();
-            CustomersEntity customer = session.get(CustomersEntity.class, "AROUT");
+            CustomersEntity customer = session.get(CustomersEntity.class, "ALFKI");
             invoice.invoice("Invoice1", startDate, endDate, customer, session);
 
 

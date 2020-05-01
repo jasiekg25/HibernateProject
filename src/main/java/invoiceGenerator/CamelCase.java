@@ -13,7 +13,7 @@ public class CamelCase {
                 ret.append(word.substring(1).toLowerCase());
             }
             if (!(ret.length()==init.length()))
-                ret.append(" ");
+                ret.append("_");
         }
 
         return ret.toString();
