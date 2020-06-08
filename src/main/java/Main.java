@@ -85,14 +85,14 @@ public class Main {
                             "getProducts - Prints all stored products(ProductID, ProductName, SupplierID and CategoryID). Takes optional arguments -pid <productID>, -pn <productName>, -sid <supplierID>, -cid <categoryID> to filter the outcome. \n\n" +
                             "getShippers - Prints all stored shippers(ShipperID, Name and Phone). Takes optional arguments -sid <shipperID>, -n <name> to filter the outcome. \n\n" +
                             "getSuppliers - Prints all stored suppliers(ShipperID, Name and Phone). Takes optional arguments -sid <supplierID>, -n <name> to filter the outcome. \n\n" +
-                            "addCategories - Adds new(or alters an existing) category entitty and returns its id. Takes optional arguments: -id <alteredEntityId>, -cn <categoryName>, -d <description>. -id argument makes it so the command alters an existing entity. \n\n" +
-                            "addCustomers - Adds new(or alters an existing) customer entitty and returns its id. Takes optional arguments: -id <alteredEntityId>, -cmn <companyName>, -ctn <contactName>, -ctt <contactTitle>, -a <address>, -c <city>, -r <region>, -pc <postalCode>, -ctr <country>, -p <phone>, -f <fax>. -id argument makes it so the command alters an existing entity. \n\n" +
-                            "addEmployees - Adds new(or alters an existing) employee entitty and returns its id. Takes optional arguments: -id <alteredEntityId>, -ln <lastName>, -fn <firstName>, -t <title>, -toc <titleOfCourtesy>, -a <address>, -c <city>, -r <region>, -pc <postalCode>, -ctr <country>, -n <notes>, -rt <reportsTo>. -id argument makes it so the command alters an existing entity. \n\n" +
-                            "addOrderDetails - Adds new(or alters an existing) order details entitty and returns its id. Takes optional arguments: -id <alteredEntityId>, -up <unitPrice>, -d <discount> -q <quantity>. -id argument makes it so the command alters an existing entity. \n\n" +
-                            "addOrders - Adds new(or alters an existing) order entitty and returns its id. Takes optional arguments: -id <alteredEntityId>, -cid <customerId>, -eid <employeeId>, -od <orderDetails>, -sv <shipVia>, -f <freight>, -sn <shipName>, -sa <shipAddress>, -sc <shipCity>, -sr <shipRegion>, -spc <shipPostalCode>, -sctr <shipCountry>. -id argument makes it so the command alters an existing entity. \n\n" +
-                            "addProducts - Adds new(or alters an existing) product entitty and returns its id. Takes optional arguments: -id <alteredEntityId>, -pn <productName>, -sid <supplierId>, -cid <categoryId>, -qpu <quantityPerUnit>, -up <unitPrice>, -uis <unitsInStock>, -uoo <unitsOnOrder>, -rl <ReorderLevel>, -d <discontinued>. -id argument makes it so the command alters an existing entity. \n\n" +
-                            "addShippers - Adds new(or alters an existing) shipper entitty and returns its id. Takes optional arguments: -id <alteredEntityId>, -cn <companyName>, -p <phone>. -id argument makes it so the command alters an existing entity. \n\n" +
-                            "addSuppliers - Adds new(or alters an existing) supplier entitty and returns its id. Takes optional arguments: -id <alteredEntityId>, -cmn <companyName>, -ctn <contactName>, -ctt <contactTitle>, -a <address>, -c <city>, -r <region>, -pc <postalCode>, -ctr <country>, -p <phone>, -f <fax>, -hp <homePage>. -id argument makes it so the command alters an existing entity. \n\n" +
+                            "addCategories - Adds new(or alters an existing) category entity and returns its id. Takes optional arguments: -id <alteredEntityId>, -cn <categoryName>, -d <description>. -id argument makes it so the command alters an existing entity. \n\n" +
+                            "addCustomers - Adds new(or alters an existing) customer entity and returns its id. Takes optional arguments: -id <alteredEntityId>, -cmn <companyName>, -ctn <contactName>, -ctt <contactTitle>, -a <address>, -c <city>, -r <region>, -pc <postalCode>, -ctr <country>, -p <phone>, -f <fax>. -id argument makes it so the command alters an existing entity. \n\n" +
+                            "addEmployees - Adds new(or alters an existing) employee entity and returns its id. Takes optional arguments: -id <alteredEntityId>, -ln <lastName>, -fn <firstName>, -t <title>, -toc <titleOfCourtesy>, -a <address>, -c <city>, -r <region>, -pc <postalCode>, -ctr <country>, -n <notes>, -rt <reportsTo>. -id argument makes it so the command alters an existing entity. \n\n" +
+                            "addOrderDetails - Adds new(or alters an existing) order details entity and returns its id. Takes optional arguments: -id <alteredEntityId>, -up <unitPrice>, -d <discount> -q <quantity>. -id argument makes it so the command alters an existing entity. \n\n" +
+                            "addOrders - Adds new(or alters an existing) order entity and returns its id. Takes optional arguments: -id <alteredEntityId>, -cid <customerId>, -eid <employeeId>, -od <orderDetails>, -sv <shipVia>, -f <freight>, -sn <shipName>, -sa <shipAddress>, -sc <shipCity>, -sr <shipRegion>, -spc <shipPostalCode>, -sctr <shipCountry>. -id argument makes it so the command alters an existing entity. \n\n" +
+                            "addProducts - Adds new(or alters an existing) product entity and returns its id. Takes optional arguments: -id <alteredEntityId>, -pn <productName>, -sid <supplierId>, -cid <categoryId>, -qpu <quantityPerUnit>, -up <unitPrice>, -uis <unitsInStock>, -uoo <unitsOnOrder>, -rl <ReorderLevel>, -d <discontinued>. -id argument makes it so the command alters an existing entity. \n\n" +
+                            "addShippers - Adds new(or alters an existing) shipper entity and returns its id. Takes optional arguments: -id <alteredEntityId>, -cn <companyName>, -p <phone>. -id argument makes it so the command alters an existing entity. \n\n" +
+                            "addSuppliers - Adds new(or alters an existing) supplier entity and returns its id. Takes optional arguments: -id <alteredEntityId>, -cmn <companyName>, -ctn <contactName>, -ctt <contactTitle>, -a <address>, -c <city>, -r <region>, -pc <postalCode>, -ctr <country>, -p <phone>, -f <fax>, -hp <homePage>. -id argument makes it so the command alters an existing entity. \n\n" +
                             "exit - Ends dialog and exits the program. \n");
                 }else if(command.equals("printInvoice")){
 
@@ -125,7 +125,11 @@ public class Main {
                         }
                     }
                     if(isValid){
-                        session.persist(tmp);
+                        try{
+                            session.persist(tmp); transaction.commit();
+                        }catch(javax.persistence.PersistenceException ex){
+                            System.out.println("Invalid insertion data.");
+                        }
                     }
                 }else if(command.equals("addCustomer")){
                     isValid = true;
@@ -188,7 +192,11 @@ public class Main {
                         }
                     }
                     if(isValid){
-                        session.persist(tmp);
+                        try{
+                            session.persist(tmp); transaction.commit();
+                        }catch(javax.persistence.PersistenceException ex){
+                            System.out.println("Invalid insertion data.");
+                        }
                     }
                 }else if(command.equals("addEmployee")){
                     isValid = true;
@@ -259,7 +267,11 @@ public class Main {
                         }
                     }
                     if(isValid){
-                        session.persist(tmp);
+                        try{
+                            session.persist(tmp); transaction.commit();
+                        }catch(javax.persistence.PersistenceException ex){
+                            System.out.println("Invalid insertion data.");
+                        }
                     }
                 }else if(command.equals("addOrderDetails")){
                     isValid = true;
@@ -294,7 +306,11 @@ public class Main {
                         }
                     }
                     if(isValid){
-                        session.persist(tmp);
+                        try{
+                            session.persist(tmp); transaction.commit();
+                        }catch(javax.persistence.PersistenceException ex){
+                            System.out.println("Invalid insertion data.");
+                        }
                     }
                 }else if(command.equals("addOrder")){
                     isValid = true;
@@ -369,7 +385,11 @@ public class Main {
                         }
                     }
                     if(isValid){
-                        session.persist(tmp);
+                        try{
+                            session.persist(tmp); transaction.commit();
+                        }catch(javax.persistence.PersistenceException ex){
+                            System.out.println("Invalid insertion data.");
+                        }
                     }
                 }else if(command.equals("addProduct")){
                     isValid = true;
@@ -428,7 +448,11 @@ public class Main {
                         }
                     }
                     if(isValid){
-                        session.persist(tmp);
+                        try{
+                            session.persist(tmp); transaction.commit();
+                        }catch(javax.persistence.PersistenceException ex){
+                            System.out.println("Invalid insertion data.");
+                        }
                     }
                 }else if(command.equals("addShipper")){
                     isValid = true;
@@ -459,7 +483,11 @@ public class Main {
                         }
                     }
                     if(isValid){
-                        session.persist(tmp);
+                        try{
+                            session.persist(tmp); transaction.commit();
+                        }catch(javax.persistence.PersistenceException ex){
+                            System.out.println("Invalid insertion data.");
+                        }
                     }
                 }else if(command.equals("addSupplier")){
                     isValid = true;
@@ -526,7 +554,11 @@ public class Main {
                         }
                     }
                     if(isValid){
-                        session.persist(tmp);
+                        try{
+                            session.persist(tmp); transaction.commit();
+                        }catch(javax.persistence.PersistenceException ex){
+                            System.out.println("Invalid insertion data.");
+                        }
                     }
                 }else if(command.equals("getCategories")){
                     isValid = true;
