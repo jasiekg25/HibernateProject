@@ -43,7 +43,7 @@ public class Invoice {
     }
 
 
-    public Invoice invoice(String invoiceNumber, Timestamp startDate, Timestamp endDate, CustomersEntity customer, Session session) {
+    public static Invoice generateInvoice(String invoiceNumber, Timestamp startDate, Timestamp endDate, CustomersEntity customer, Session session) {
 
         List<OrderData> invoiceOrdersList = OrderData.getOrdersList(startDate, endDate, customer, session);
         double totalFreightPrice = invoiceOrdersList.stream().map(OrderData::getFreight).reduce(0.0, Double::sum);
