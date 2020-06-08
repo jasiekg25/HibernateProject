@@ -11,8 +11,8 @@ public class OrderDetailsEntity {
     private int orderId;
     private int productId;
     private BigDecimal unitPrice;
-    private int quantity;
-    private double discount;
+    private int quantity = 0;
+    private double discount = 0;
 
     public String toString(){
         return Integer.toString(orderId) + "\t|\t" + Integer.toString(productId) + "\t|\t" + unitPrice.toString() + "\t|\t" + Integer.toString(quantity) + "\t|\t" + Double.toString(discount);
