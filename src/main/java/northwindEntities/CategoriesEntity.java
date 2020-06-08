@@ -21,6 +21,10 @@ public class CategoriesEntity {
         this.picture = picture;
     }
 
+    public String toString(){
+        return Integer.toString(categoryId) + "\t|\t" + categoryName + "\t|\t" + description;
+    }
+
     @Id
     @Column(name = "CategoryID")
     public int getCategoryId() {

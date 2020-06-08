@@ -25,6 +25,7 @@ public class CustomersEntity {
     private byte[] imageThumbnail;
 
 
+
         public CustomersEntity(
             String customerId,
             String companyName,
@@ -57,7 +58,12 @@ public class CustomersEntity {
 
     ;
 
+
     public CustomersEntity() {
+    }
+
+    public String toString(){
+        return customerId + "\t|\t" + companyName + "\t|\t" + address + " " + city + " " + region + " " + postalCode + " " + country + "\t|\t" + phone + "\t|\t" + fax;
     }
 
     @Id

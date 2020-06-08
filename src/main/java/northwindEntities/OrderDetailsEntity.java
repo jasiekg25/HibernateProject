@@ -14,6 +14,10 @@ public class OrderDetailsEntity {
     private int quantity;
     private double discount;
 
+    public String toString(){
+        return Integer.toString(orderId) + "\t|\t" + Integer.toString(productId) + "\t|\t" + unitPrice.toString() + "\t|\t" + Integer.toString(quantity) + "\t|\t" + Double.toString(discount);
+    }
+
     @Id
     @Column(name = "OrderID")
     public int getOrderId() {

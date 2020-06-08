@@ -10,6 +10,10 @@ public class ShippersEntity {
     private String companyName;
     private String phone;
 
+    public String toString(){
+        return Integer.toString(shipperId) + "\t|\t" + companyName + "\t|\t" + phone;
+    }
+
     @Id
     @Column(name = "ShipperID")
     public int getShipperId() {

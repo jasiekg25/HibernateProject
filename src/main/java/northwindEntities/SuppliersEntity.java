@@ -5,7 +5,8 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "suppliers", schema = "db_project", catalog = "")
-public class SuppliersEntity {
+public class
+SuppliersEntity {
     private int supplierId;
     private String companyName;
     private String contactName;
@@ -18,6 +19,10 @@ public class SuppliersEntity {
     private String phone;
     private String fax;
     private String homePage;
+
+    public String toString(){
+        return Integer.toString(supplierId) + "\t|\t" + companyName + "\t|\t" + phone;
+    }
 
     @Id
     @Column(name = "SupplierID")

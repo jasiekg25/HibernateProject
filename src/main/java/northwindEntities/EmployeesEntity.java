@@ -26,6 +26,10 @@ public class EmployeesEntity {
     private String notes;
     private Integer reportsTo;
 
+    public String toString(){
+        return Integer.toString(employeeId) + "\t|\t" + lastName + "\t|\t" + firstName;
+    }
+
     @Id
     @Column(name = "EmployeeID")
     public int getEmployeeId() {

@@ -18,6 +18,10 @@ public class ProductsEntity {
     private Integer reorderLevel;
     private Byte discontinued;
 
+    public String toString(){
+        return Integer.toString(productId) + "\t|\t" + productName + "\t|\t" + Integer.toString(supplierId) + "\t|\t" + Integer.toString(categoryId);
+    }
+
     @Id
     @Column(name = "ProductID")
     public int getProductId() {

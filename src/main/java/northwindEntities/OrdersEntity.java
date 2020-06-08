@@ -23,6 +23,11 @@ public class OrdersEntity {
     private String shipPostalCode;
     private String shipCountry;
 
+
+    public String toString(){
+        return Integer.toString(orderId) + "\t|\t" + customerId + "\t|\t" + employeeId + "\t|\t" + orderDate;
+    }
+
     @Id
     @Column(name = "OrderID")
     public int getOrderId() {
