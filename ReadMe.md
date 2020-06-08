@@ -33,12 +33,8 @@ User interface include:
  - **exit**  - *Ends dialog and exits the program.*
 ## Showcase
 #### Inputed Data:
-```json
-{
-  "startDate": "1994-04-03 00:00:00",
-  "endDate": "2020-04-04 00:00:00",
-  "customerID": "ALFKI"
-}
+```
+printInvoice -sd 1994-04-03_00:00:00 -ed 2020-04-04_00:00:00 -c ALFKI
 ```
 #### Generated Invoice
 [Example Of Generated Invoice in PDF](src/main/resources/Alfreds_Futterkiste_invoice.pdf)  
