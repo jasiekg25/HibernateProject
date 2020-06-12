@@ -31,6 +31,69 @@ User interface include:
  - **addShippers**  - *Adds new(or alters an existing) shipper entity and returns its id. Takes optional arguments: -id <alteredEntityId>, -cn <companyName>, -p <phone>. -id argument makes it so the command alters an existing entity.*
  - **addSuppliers**  - *Adds new(or alters an existing) supplier entity and returns its id. Takes optional arguments: -id <alteredEntityId>, -cmn <companyName>, -ctn <contactName>, -ctt <contactTitle>, -a <address>, -c <city>, -r <region>, -pc <postalCode>, -ctr <country>, -p <phone>, -f <fax>, -hp <homePage>. -id argument makes it so the command alters an existing entity.*
  - **exit**  - *Ends dialog and exits the program.*
+ 
+## Description of the selected functionality
+#### PrintInvoice
+Method take mandatory parameters and use them to take appropriate data from Northwind Database. 
+Class ***OrderData*** contains all attributes necessary to gather information about one Order to generate invoice from many entities.
+Class ***Invoice*** has list of ***OrderData*** objects.
+The Query to extract data into OrderData object's list:
+```java
+public class OrderData{
+//  ...
+    public static List<OrderData> getOrdersList(Timestamp startDate, Timestamp endDate, CustomersEntity customer, Session session){
+        @SuppressWarnings("rawtypes") Query query = session
+                .createQuery("select new invoiceData.OrderData (\n" +
+                        "\t\to.orderId,\n" +
+                        "\t\to.orderDate,\n" +
+                        "\t\tc.customerId,\n" +
+                        "\t\tp.productId,\n" +
+                        "\t\tp.productName,\n" +
+                        "\t\tod.unitPrice,\n" +
+                        "\t\tod.quantity,\n" +
+                        "\t\tod.discount,\n" +
+                        "\t\to.freight,\n" +
+                        "\t\t(od.unitPrice * od.quantity * (1 - od.discount)) + o.freight as totalPrice )\n" +
+                        "\tfrom ShippersEntity as s\n" +
+                        "\tinner join  OrdersEntity as o on o.shipVia = s.shipperId\n" +
+                        "\tinner join CustomersEntity as c on c.customerId = o.customerId\n" +
+                        "\tinner join OrderDetailsEntity as od on od.orderId = o.orderId\n" +
+                        "\tinner join ProductsEntity  as p on p.productId = od.productId\n" +
+                        "\twhere c.customerId = \'" + customer.getCustomerId() + "\'\n" +
+                        "\t \tand o.orderDate between  \'" + startDate + "\'\n" +
+                        " \t \tand  \'" + endDate + "\'");
+
+        List <OrderData> invoiceResultList = new LinkedList<>();
+        for(Object o : query.list()){
+            invoiceResultList.add((OrderData) o);
+        }
+        return invoiceResultList;
+    }
+//  ...
+}
+```
+
+Next step is to create invoice from list of orders.
+```java
+public class Invoice{
+//  ...
+    public static Invoice generateInvoice(String invoiceNumber, Timestamp startDate, Timestamp endDate, CustomersEntity customer, Session session) {
+
+        List<OrderData> invoiceOrdersList = OrderData.getOrdersList(startDate, endDate, customer, session);
+        double totalFreightPrice = invoiceOrdersList.stream().map(OrderData::getFreight).reduce(0.0, Double::sum);
+        double totalOrdersPrice = invoiceOrdersList.stream().map(OrderData::getTotalPrice).reduce(0.0, Double::sum);
+        Invoice invoiceData = new Invoice(invoiceNumber, customer, invoiceOrdersList, startDate, endDate, totalFreightPrice, totalOrdersPrice);
+
+        String fileName = CamelCase.toCamelCase(customer.getCompanyName());
+        File newInvoice = new File("src/main/resources/" + fileName + "_invoice.pdf");
+        InvoiceGenerator.makePDF(newInvoice, invoiceData);
+        return invoiceData;
+    }
+//  ...
+}
+```
+ Upper method is generating an object Invoice and creating pdf version of invoice.
+
 ## Showcase
 #### Inputed Data:
 ```
