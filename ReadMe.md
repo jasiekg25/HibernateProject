@@ -33,10 +33,10 @@ User interface include:
  - **exit**  - *Ends dialog and exits the program.*
  
 ## Description of the selected functionality
-#### PrintInvoice
-Method take mandatory parameters and use them to take appropriate data from Northwind Database. 
-Class ***OrderData*** contains all attributes necessary to gather information about one Order to generate invoice from many entities.
-Class ***Invoice*** has list of ***OrderData*** objects.
+#### printInvoice
+Method takes mandatory parameters and use them to take appropriate data from Northwind Database. 
+Class ***OrderData*** contains all attributes necessary to gather information about one Order(gathered from many entities).
+Class ***Invoice*** has list of ***OrderData*** objects.  
 The Query to extract data into OrderData object's list:
 ```java
 public class OrderData{
@@ -73,7 +73,7 @@ public class OrderData{
 }
 ```
 
-Next step is to create invoice from list of orders.
+Next step is to create an invoice from list of orders.
 ```java
 public class Invoice{
 //  ...
@@ -93,6 +93,138 @@ public class Invoice{
 }
 ```
  Upper method is generating an object Invoice and creating pdf version of invoice.
+ The way how to generate pdf version is described in class ***InvoiceGenerator***
+
+#### getOrders
+This functionality is using command line parser to create an appropriate quarry.
+```java
+public class MainCLI{
+    public static void startDialog(Session session, Transaction transaction) throws IOException {
+//  ...     
+        if(command.equals("getOrders")){
+            isValid = true;
+            int i=0;
+            String conditions = "";
+            while(commandTok.hasMoreTokens()){
+                if(i==0){
+                    conditions = conditions + " WHERE";
+                }else{
+                    conditions = conditions + " AND";
+                }
+                i++;
+                command = commandTok.nextToken();
+                if(command.equals("-oid")){
+                    conditions = conditions + " OrderID like" + "\'" + commandTok.nextToken().replace('_', ' ') + "\'";
+                }else if(command.equals("-cid")){
+                    conditions = conditions + " CustomerID like " +  "\'" + commandTok.nextToken().replace('_', ' ') + "\'";
+                }else if(command.equals("-eid")){
+                    conditions = conditions + " EmployeeID like " +  "\'" + commandTok.nextToken().replace('_', ' ') + "\'";
+                }else{
+                    System.out.println("Invalid argument: \"" + command + "\".");
+                    isValid = false;
+                    break;
+                }
+            }
+            if(isValid){
+                List<OrdersEntity> found = session.createQuery("SELECT c FROM OrdersEntity c" + conditions, OrdersEntity.class).getResultList();
+                found.forEach(entry -> System.out.println(entry.toString()));
+            }
+        }
+//      ...
+    }
+//  ...
+}
+```
+#### addOrder
+*startDialog* method in ***MainCLI*** class is parsing comands into appropriate instruction. If order with given ID is already in Database, we change value of atributes, otherwise we create a new one
+
+```java
+public class MainCLI{
+    public static void startDialog(Session session, Transaction transaction) throws IOException {
+//  ...        
+        if(command.equals("addOrder")){
+                isValid = true;
+                OrdersEntity tmp = new OrdersEntity();
+                while(commandTok.hasMoreTokens()){
+                    command = commandTok.nextToken();
+                    if(command.equals("-id")){
+                        command = commandTok.nextToken().replace('_', ' ');
+                        List<OrdersEntity> tmp2 = session.createQuery("SELECT c FROM OrdersEntity c WHERE OrderID like " + "\'" + command + "\'", OrdersEntity.class).getResultList();
+                        if(tmp2.isEmpty()){
+                            System.out.println("Invalid ID.");
+                            isValid = false;
+                            break;
+                        }
+                        if(tmp.getCustomerId()!=null)
+                            tmp2.get(0).setCustomerId(tmp.getCustomerId());
+                        if(tmp.getEmployeeId()!=null)
+                            tmp2.get(0).setEmployeeId(tmp.getEmployeeId());
+                        if(tmp.getOrderDate()!=null)
+                            tmp2.get(0).setOrderDate(tmp.getOrderDate());
+                        if(tmp.getRequiredDate()!=null)
+                            tmp2.get(0).setRequiredDate(tmp.getRequiredDate());
+                        if(tmp.getShippedDate()!=null)
+                            tmp2.get(0).setShippedDate(tmp.getShippedDate());
+                        if(tmp.getShipVia()!=null)
+                            tmp2.get(0).setShipVia(tmp.getShipVia());
+                        if(tmp.getFreight()!=null)
+                            tmp2.get(0).setFreight(tmp.getFreight());
+                        if(tmp.getShipName()!=null)
+                            tmp2.get(0).setShipName(tmp.getShipName());
+                        if(tmp.getShipAddress()!=null)
+                            tmp2.get(0).setShipAddress(tmp.getShipAddress());
+                        if(tmp.getShipCity()!=null)
+                            tmp2.get(0).setShipCity(tmp.getShipCity());
+                        if(tmp.getShipRegion()!=null)
+                            tmp2.get(0).setShipRegion(tmp.getShipRegion());
+                        if(tmp.getShipPostalCode()!=null)
+                            tmp2.get(0).setShipPostalCode(tmp.getShipPostalCode());
+                        if(tmp.getShipCountry()!=null)
+                            tmp2.get(0).setShipCountry(tmp.getShipCountry());
+                        tmp = tmp2.get(0);
+                    }else if(command.equals("-cid")){
+                        tmp.setCustomerId(commandTok.nextToken().replace('_', ' '));
+                    }else if(command.equals("-eid")){
+                        tmp.setEmployeeId(parseInt(commandTok.nextToken()));
+                    }else if(command.equals("-od")){
+                        tmp.setOrderDate(Timestamp.valueOf(commandTok.nextToken()));
+                    }else if(command.equals("-rd")){
+                        tmp.setRequiredDate(Timestamp.valueOf(commandTok.nextToken()));
+                    }else if(command.equals("-sd")){
+                        tmp.setShippedDate(Timestamp.valueOf(commandTok.nextToken()));
+                    }else if(command.equals("-sv")){
+                        tmp.setShipVia(parseInt(commandTok.nextToken()));
+                    }else if(command.equals("-f")){
+                        tmp.setFreight(BigDecimal.valueOf(parseDouble(commandTok.nextToken())));
+                    }else if(command.equals("-sn")){
+                        tmp.setShipName(commandTok.nextToken().replace('_', ' '));
+                    }else if(command.equals("-sa")){
+                        tmp.setShipAddress(commandTok.nextToken().replace('_', ' '));
+                    }else if(command.equals("-sc")){
+                        tmp.setShipCity(commandTok.nextToken().replace('_', ' '));
+                    }else if(command.equals("-sr")){
+                        tmp.setShipRegion(commandTok.nextToken().replace('_', ' '));
+                    }else if(command.equals("-spc")){
+                        tmp.setShipPostalCode(commandTok.nextToken().replace('_', ' '));
+                    }else if(command.equals("-sctr")){
+                        tmp.setShipCountry(commandTok.nextToken().replace('_', ' '));
+                    }else{
+                        System.out.println("Invalid argument: \"" + command + "\".");
+                        isValid = false;
+                        break;
+                    }
+                }
+                if(isValid){
+                    try{
+                        session.persist(tmp); transaction.commit();
+                    }catch(javax.persistence.PersistenceException ex){
+                        System.out.println("Invalid insertion data.");
+                    }
+                }
+        }
+    }
+}
+```
 
 ## Showcase
 #### Inputed Data:
