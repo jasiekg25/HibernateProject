@@ -33,7 +33,7 @@ User interface include:
  - **exit**  - *Ends dialog and exits the program.*
  
 ## Description of the selected functionality
-#### printInvoice
+### printInvoice
 Method takes mandatory parameters and use them to take appropriate data from Northwind Database. 
 Class ***OrderData*** contains all attributes necessary to gather information about one Order(gathered from many entities).
 Class ***Invoice*** has list of ***OrderData*** objects.  
@@ -95,7 +95,7 @@ public class Invoice{
  Upper method is generating an object Invoice and creating pdf version of invoice.
  The way how to generate pdf version is described in class ***InvoiceGenerator***
 
-#### getOrders
+### getOrders
 This functionality is using command line parser to create an appropriate quarry.
 ```java
 public class MainCLI{
@@ -135,7 +135,7 @@ public class MainCLI{
 //  ...
 }
 ```
-#### addOrder
+### addOrder
 *startDialog* method in ***MainCLI*** class is parsing comands into appropriate instruction. If order with given ID is already in Database, we change value of atributes, otherwise we create a new one
 
 ```java
